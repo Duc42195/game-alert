@@ -1,0 +1,8 @@
+# Thư mục build output
+/target/
+
+# Tệp khóa phụ thuộc
+Cargo.lock
+
+# Tệp và thư mục của Git
+/.git/
