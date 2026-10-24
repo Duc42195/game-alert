@@ -24,12 +24,12 @@ pub const REGISTERED_MACHINES: &[(&str, &str)] = &[
     // ("TEN-MAY-WINDOWS", "Tên dễ hiểu, vd Máy phòng khách"),
 ];
 
-/// Discord webhook URL nhúng lúc compile bởi build.rs từ `.agents/state/secrets.env`
-/// (ưu tiên) hoặc `~/secret.env` (fallback) — NẾU có. Cho phép rỗng: bản build công khai
-/// (release tải từ GitHub, build không kèm secrets.env nào) sẽ rỗng ở đây một cách hợp lệ
-/// — `src/webhook_setup.rs` sẽ hỏi người dùng nhập lúc chạy lần đầu và lưu lại, không bao
-/// giờ hard-code trực tiếp giá trị thật vào đây.
-pub const DISCORD_WEBHOOK_URL: &str = match option_env!("DISCORD_WEBHOOK_URL") {
-    Some(url) => url,
-    None => "",
-};
+/// Discord webhook URL dùng để gửi cảnh báo. Nhúng vào lúc compile bởi build.rs từ
+/// `.agents/state/secrets.env` (ưu tiên) hoặc `~/secret.env` (fallback) — không bao giờ
+/// hard-code trực tiếp giá trị thật ở đây. Thiếu secret thì lỗi ngay lúc `cargo build` —
+/// không build ra bản thiếu webhook để phát tán: mỗi file .exe phân phối (gửi riêng cho
+/// từng máy) đều phải build với webhook nhúng sẵn, không có đường vòng nào khác.
+pub const DISCORD_WEBHOOK_URL: &str = env!(
+    "DISCORD_WEBHOOK_URL",
+    "Thiếu DISCORD_WEBHOOK_URL. Tạo file .agents/state/secrets.env (hoặc ~/secret.env) với dòng DISCORD_WEBHOOK_URL=... — xem AGENTS.md mục Secrets"
+);

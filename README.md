@@ -21,17 +21,15 @@ Chi tiết kiến trúc: xem [`docs/design.md`](docs/design.md).
 - Rust toolchain khá mới (dự án dùng `edition = "2024"`), nên chạy `rustup update` trước khi build.
 - Ứng dụng chỉ nhắm tới Windows (dùng để kill tiến trình, cần chạy trên máy Windows, hoặc build sẵn `.exe` từ máy khác rồi copy sang).
 
-## Cấu hình Discord webhook trước khi build (chỉ cần cho bản tự build riêng)
+## Cấu hình Discord webhook trước khi build (bắt buộc)
 
-Dự án không dùng file cấu hình thông thường — mọi tùy chỉnh (danh sách game, máy đã đăng ký) nằm thẳng trong `src/settings.rs`, đổi là build lại. Riêng **webhook Discord** là secret, không được hard-code vào `.rs`/commit lên git, nên xử lý theo 2 cơ chế song song:
+Dự án không dùng file cấu hình thông thường — mọi tùy chỉnh (danh sách game, máy đã đăng ký) nằm thẳng trong `src/settings.rs`, đổi là build lại. Riêng **webhook Discord** là secret, không được hard-code vào `.rs`/commit lên git: tạo file `.agents/state/secrets.env` (ưu tiên, git-ignored) hoặc `~/secret.env` (dùng chung cho máy) với nội dung:
+```
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+```
+`build.rs` tự đọc và nhúng vào binary lúc `cargo build`. Thiếu file này thì `cargo build` **lỗi ngay**, không build ra bản thiếu webhook — không có cơ chế nhập webhook lúc chạy. Cách tạo webhook: xem `docs/design.md` mục "Thiết kế kênh thông báo".
 
-1. **Bản bạn tự build cho mình**: tạo file `.agents/state/secrets.env` (ưu tiên, git-ignored) hoặc `~/secret.env` (dùng chung cho máy) với nội dung:
-   ```
-   DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
-   ```
-   `build.rs` tự đọc và nhúng vào binary lúc `cargo build` — chạy lên không hỏi gì cả. Cách tạo webhook: xem `docs/design.md` mục "Thiết kế kênh thông báo".
-
-2. **Bản tải từ GitHub Release (không kèm secret nào)**: chạy lần đầu, chương trình tự hỏi qua console "Dán Discord Webhook URL rồi nhấn Enter", lưu vào file `webhook.txt` cạnh `.exe`. Các lần chạy sau không hỏi lại. Muốn đổi webhook: xoá `webhook.txt`, chạy lại, nhập webhook mới.
+**Phân phối:** project không public binary nào (GitHub Release chỉ có source) — mỗi file `.exe` đều do bạn tự build (webhook thật đã nhúng sẵn bên trong) rồi gửi riêng cho từng máy. Vì webhook nhúng cứng trong binary, không chia sẻ file `.exe` đã build công khai.
 
 ## Cài đặt / Build
 

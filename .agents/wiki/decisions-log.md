@@ -53,3 +53,10 @@ Format:
 - Why: Repo public, nên không thể đính kèm `.exe` đã nhúng webhook thật vào GitHub Release (ai tải cũng `strings` lấy ra URL, gửi tin rác vào Discord riêng của maintainer — đã verify bằng thực nghiệm rằng `strings` đọc được chuỗi đó từ binary cũ). Cơ chế hỏi+lưu runtime làm binary public hoàn toàn không chứa secret nào, mỗi người tải về tự nhập webhook CỦA HỌ, lưu cục bộ trên máy họ — không ảnh hưởng tới nhau. Đã verify bằng thực nghiệm cả 2 nhánh: build không có secrets.env → 0 webhook trong binary, hỏi+lưu đúng `webhook.txt`, chạy lại không hỏi lại; build có secrets.env → vẫn nhúng sẵn như cũ.
 - Supersedes: 2026-10-24 — Secrets nạp lúc build qua build.rs, không hard-code trong source (vẫn giữ cơ chế build.rs, chỉ nới lỏng "thiếu thì lỗi" thành "thiếu thì cho phép rỗng + hỏi runtime")
 - Who / task: Duc42195
+
+## 2026-10-25 — Revert: webhook luôn bắt buộc nhúng lúc build, không phân phối .exe công khai
+- Topic: secrets-management
+- Decision: Bỏ cơ chế "webhook rỗng hợp lệ + hỏi qua console lúc chạy lần đầu" (xoá `src/webhook_setup.rs`). `DISCORD_WEBHOOK_URL` quay lại `env!()` — thiếu secret thì `cargo build` lỗi ngay, không có cách nào build ra binary thiếu webhook. Không còn đính `.exe` vào GitHub Release (đã gỡ asset khỏi release `v0.2.0`, sửa lại mô tả release). Mỗi file `.exe` gửi cho máy khác đều do maintainer tự build (đã có webhook thật nhúng sẵn) và gửi riêng, không public.
+- Why: Chủ project quyết định không cần kịch bản "người lạ tải binary công khai" nữa — tất cả máy dùng app này (Dell, các máy khác) đều do chính chủ project cấu hình và phân phối thủ công. Bỏ bớt 1 tầng cơ chế (prompt+lưu file runtime) giúp đơn giản hơn khi không còn nhu cầu đó, đúng tinh thần "giữ đơn giản" xuyên suốt dự án.
+- Supersedes: 2026-10-25 — Webhook rỗng hợp lệ lúc build; hỏi + lưu runtime cho bản public
+- Who / task: Duc42195
