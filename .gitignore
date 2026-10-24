@@ -1,8 +1,15 @@
 # Thư mục build output
 /target/
 
-# Tệp khóa phụ thuộc
-Cargo.lock
+# Cargo.lock: COMMIT (không ignore) — đây là binary crate, không phải lib, nên khuyến
+# nghị chính thức của Cargo là commit để build tái lập được đúng version dependency.
 
 # Tệp và thư mục của Git
 /.git/
+.agents/state/
+.agents/*.bak
+__pycache__/
+
+# Bản copy interpreter (bash/powershell) đổi tên để test, xem scripts/README.md
+scripts/game-alert-test
+scripts/game-alert-test.exe

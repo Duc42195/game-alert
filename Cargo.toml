@@ -1,7 +1,14 @@
 [package]
 name = "game-alert"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]
 sysinfo = "0.29"
+ureq = { version = "2", features = ["tls"] }
+
+[features]
+# Thêm "game-alert-test.exe"/"game-alert-test" vào GAME_LIST để tự test pipeline
+# phát hiện -> kill -> notify bằng chương trình giả (xem scripts/), không ảnh hưởng
+# build release bình thường. Dùng: cargo run --features smoke-test
+smoke-test = []
