@@ -1,4 +1,10 @@
+// Bản build `--features background` không có console nào trên Windows (xem Cargo.toml) —
+// println! sẽ không hiện ở đâu cả, nên mọi thứ cần thấy được phải qua logging::log()
+// (ghi vào game-alert.log cạnh .exe) thay vì println! trực tiếp.
+#![cfg_attr(feature = "background", windows_subsystem = "windows")]
+
 mod blocker;
+mod logging;
 mod machine;
 mod notifier;
 mod process_monitor;
@@ -11,7 +17,7 @@ use notifier::{DiscordWebhookNotifier, Notifier};
 
 fn main() {
     let machine_label = machine::label();
-    println!("Máy: {machine_label}");
+    logging::log(&format!("Máy: {machine_label}"));
 
     let (notify_tx, notify_rx) = mpsc::channel::<String>();
 
@@ -20,7 +26,7 @@ fn main() {
         let notifier = DiscordWebhookNotifier::new(settings::DISCORD_WEBHOOK_URL);
         for message in notify_rx {
             if let Err(e) = notifier.send(&message) {
-                println!("Gửi thông báo thất bại: {e}");
+                logging::log(&format!("Gửi thông báo thất bại: {e}"));
             }
         }
     });

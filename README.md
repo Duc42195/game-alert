@@ -57,6 +57,13 @@ Binary sẽ nằm tại `target/x86_64-pc-windows-gnu/release/game-alert.exe`, c
 
 Chạy trực tiếp file `.exe` trên Windows. Vì ứng dụng cần kill tiến trình của chương trình khác, có thể cần chạy với quyền Administrator ("Run as administrator") nếu Windows từ chối quyền kill. Chương trình chạy vô hạn (vòng lặp quét liên tục) — dừng bằng cách đóng cửa sổ console hoặc `Ctrl+C`.
 
+### Build chạy nền, không mở console
+
+```bash
+cargo build --release --features background
+```
+Build này không mở cửa sổ console trên Windows (dùng cho auto-startup, chạy lâu dài). Vì không còn console, log (phát hiện/chặn game, lỗi gửi Discord...) chỉ còn ghi vào file `game-alert.log` cạnh `.exe` — bản console thường vẫn in ra cả 2 nơi. Nên test bằng bản console trước, khi đã chắc chạy đúng mới chuyển sang bản `background` để chạy nền thật.
+
 ## Tự test (không cần Roblox thật)
 
 ```bash

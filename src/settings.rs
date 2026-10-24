@@ -21,6 +21,7 @@ pub const POLL_INTERVAL: Duration = Duration::from_secs(2);
 /// đầu tiên, copy vào đây, build lại.
 pub const REGISTERED_MACHINES: &[(&str, &str)] = &[
     ("Ducky", "Ducky-Ubuntu"),
+    ("DESKTOP-80KNF13", "Tungbeo-Dell"),
     // ("TEN-MAY-WINDOWS", "Tên dễ hiểu, vd Máy phòng khách"),
 ];
 

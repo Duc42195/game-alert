@@ -60,3 +60,9 @@ Format:
 - Why: Chủ project quyết định không cần kịch bản "người lạ tải binary công khai" nữa — tất cả máy dùng app này (Dell, các máy khác) đều do chính chủ project cấu hình và phân phối thủ công. Bỏ bớt 1 tầng cơ chế (prompt+lưu file runtime) giúp đơn giản hơn khi không còn nhu cầu đó, đúng tinh thần "giữ đơn giản" xuyên suốt dự án.
 - Supersedes: 2026-10-25 — Webhook rỗng hợp lệ lúc build; hỏi + lưu runtime cho bản public
 - Who / task: Duc42195
+
+## 2026-10-25 — Chạy nền không console qua feature flag `background`, log ra file
+- Topic: logging-and-subsystem
+- Decision: Thêm Cargo feature `background` áp `#![windows_subsystem = "windows"]` (chỉ có hiệu lực trên Windows, không đổi gì trên Linux) qua `cfg_attr`. Vì console biến mất hoàn toàn với subsystem này, mọi `println!` log trước đây chuyển sang `logging::log()` — ghi cả ra console (nếu có) lẫn file `game-alert.log` cạnh `.exe`. Build mặc định (không bật feature) giữ nguyên console như cũ, chỉ khác là log giờ ghi thêm ra file song song (không mất gì).
+- Why: Người dùng muốn chạy app nền lâu dài (cùng với auto-startup họ tự cấu hình) mà không có cửa sổ console hiện ra làm phiền. `windows_subsystem` là cách chuẩn của Rust để chọn GUI subsystem lúc build — nhưng hệ quả là mất console nên cần file log thay thế để vẫn debug được khi cần. Để 2 bản build riêng (feature flag) thay vì chỉ 1 bản background mặc định, vì bản console vẫn cần cho việc test/debug ban đầu trên mỗi máy mới trước khi chuyển sang chạy nền thật.
+- Who / task: Duc42195 / GA-16

@@ -35,7 +35,7 @@ pub fn run(notify_tx: Sender<String>, machine_label: String) {
                 if should_notify(game, &blocked) {
                     let msg = format!("[{machine_label}] Phát hiện và chặn tiến trình game: {game}");
                     if notify_tx.send(msg).is_err() {
-                        println!("Notifier worker đã dừng, không gửi được cảnh báo.");
+                        crate::logging::log("Notifier worker đã dừng, không gửi được cảnh báo.");
                     }
                 }
 

@@ -12,3 +12,8 @@ ureq = { version = "2", features = ["tls"] }
 # phát hiện -> kill -> notify bằng chương trình giả (xem scripts/), không ảnh hưởng
 # build release bình thường. Dùng: cargo run --features smoke-test
 smoke-test = []
+# Build không mở cửa sổ console trên Windows (windows_subsystem = "windows"). Chỉ dùng
+# cho bản chạy nền lâu dài, SAU KHI đã test ổn bằng bản console thường — bản này không
+# có stdout/console, mọi log chỉ còn thấy trong game-alert.log cạnh .exe (xem logging.rs).
+# Dùng: cargo build --release --features background
+background = []

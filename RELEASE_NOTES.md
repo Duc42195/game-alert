@@ -7,11 +7,14 @@
   bắt buộc nhúng lúc build (`cargo build` lỗi ngay nếu thiếu secret) — không còn publish
   `.exe` công khai lên GitHub Release nữa; mỗi file `.exe` (đã có webhook thật nhúng sẵn)
   do maintainer tự build và gửi riêng cho từng máy.
+- Đăng ký máy Dell (`Tungbeo-Dell`) trong `REGISTERED_MACHINES`.
+- Thêm build `--features background`: không mở cửa sổ console trên Windows, dùng cho
+  auto-startup/chạy nền lâu dài. Log chuyển sang ghi file `game-alert.log` cạnh `.exe`
+  (bản console thường vẫn in ra cả console lẫn file này).
 
 Dự kiến cho các bản tiếp theo:
 
 - Thêm màn hình chặn (overlay) làm phiền khi phát hiện game đang chạy, thay vì chỉ kill ngầm.
-- Chạy nền không mở cửa sổ console (Windows subsystem riêng).
 - Discord Bot cho tương tác 2 chiều (vd lệnh tạm mở chặn trong X phút).
 
 ## v0.2.0 — 2026-10-25
